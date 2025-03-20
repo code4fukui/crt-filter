@@ -1,0 +1,29 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><link rel="icon" href="data:">
+</head><body>
+
+<canvas id=canvas widh=500 height=500>
+</canvas>
+
+<script type="module">
+import { initFilterCRT } from "./initFilterCRT.js";
+
+const canvas = document.getElementById("canvas");
+canvas.width = canvas.height = 500;
+canvas.style.width = "100vw";
+canvas.style.height = "100vw";
+const g = canvas.getContext("2d");
+
+
+setInterval(() => {
+	for (let i = 0; i < 20; i++) {
+		g.fillStyle = Math.random() < .5 ? "green" : "black";
+		const w = 50;
+		const x = Math.random() * (500 - w);
+		const y = Math.random() * (500 - w);
+		g.fillRect(x, y, w, w);
+	}
+}, 1000 / 120);
+
+initFilterCRT(canvas);
+
+</script>
