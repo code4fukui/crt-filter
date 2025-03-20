@@ -2,7 +2,7 @@
 
 ## Usage
 
-```
+```js
 import { initFilterCRT } from "https://code4fukui.github.io/initFilterCRT.js";
 
 const canvas = document.createElement("canvas");
