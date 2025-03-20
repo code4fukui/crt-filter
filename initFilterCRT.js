@@ -10,14 +10,17 @@
 
 import { shaders } from "./shaders.js";
 
-export function initFilterCRT(canvas) {
-	const pico8_canvas = canvas;
+export function initFilterCRT(pico8_canvas) {
+	pico8_canvas.style.position = "absolute";
+	pico8_canvas.style.top = 0;
+	pico8_canvas.style.left = 0;
+
 	var canvas = document.createElement('canvas');
 	canvas.id = "crtcanvas";
 	canvas.className = "canvas";
-	canvas.style.position = "absolute";
-	canvas.style.top = 0;
-	canvas.style.left = 0;
+	//canvas.style.position = "absolute";
+	//canvas.style.top = 0;
+	//canvas.style.left = 0;
 	canvas.width = pico8_canvas.clientWidth;
 	canvas.height = pico8_canvas.clientHeight;
 	var gl = canvas.getContext('webgl');

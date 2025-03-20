@@ -4,13 +4,24 @@
 <canvas id=canvas widh=500 height=500>
 </canvas>
 
+<style>
+body {
+	background-color: black;
+	text-align: center;
+}
+canvas {
+	display: inline-block;
+	width: 80vh;
+	max-width: 90vw;
+	margin: 5vh 0;
+}
+</style>
+
 <script type="module">
 import { initFilterCRT } from "./initFilterCRT.js";
 
 const canvas = document.getElementById("canvas");
 canvas.width = canvas.height = 500;
-canvas.style.width = "100vw";
-canvas.style.height = "100vw";
 const g = canvas.getContext("2d");
 
 
