@@ -334,10 +334,12 @@ export function initFilterCRT(pico8_canvas, bgcolor = [0, 0, 0]) {
 
 		lastdw = dw;
 		lastdh = dh;
-
-		requestAnimationFrame(draw);
+		
+		if (canvas.style.opacity == 1) {
+			requestAnimationFrame(draw);
+		}
 	}
-
+	canvas.style.opacity = 1;
 	requestAnimationFrame(draw);
 
 	pico8_canvas.org_canvas = canvas;
@@ -345,6 +347,7 @@ export function initFilterCRT(pico8_canvas, bgcolor = [0, 0, 0]) {
 		if (b) {
 			pico8_canvas.style.opacity = 0;
 			canvas.style.opacity = 1;
+			requestAnimationFrame(draw);
 		} else {
 			pico8_canvas.style.opacity = 1;
 			canvas.style.opacity = 0;
