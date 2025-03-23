@@ -13,6 +13,17 @@ const canvas = document.createElement("canvas");
 initFilterCRT(canvas);
 ```
 
+bgcolor
+```js
+initFilterCRT(canvas, [1.0, 0.0, 0.0]); // bgcolor = red
+```
+
+setActive
+```js
+const filteredcanvas = initFilterCRT(canvas);
+chk.oninput = () => filteredcanvas.setActive(chk.checked);
+```
+
 ## reference
 
 - from [QUANTATTACK](https://qniapp.github.io/quantattack/) / [qniapp/quantattack](https://github.com/qniapp/quantattack/)
