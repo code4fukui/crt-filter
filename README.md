@@ -7,7 +7,7 @@ http://code4fukui.github.io/crt-filter/
 ## Usage
 
 ```js
-import { initFilterCRT } from "https://code4fukui.github.io/initFilterCRT.js";
+import { initFilterCRT } from "https://code4fukui.github.io/crt-filter/initFilterCRT.js";
 
 const canvas = document.createElement("canvas");
 initFilterCRT(canvas);
