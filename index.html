@@ -1,12 +1,15 @@
 <!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><link rel="icon" href="data:">
 </head><body>
 
-<canvas id=canvas widh=500 height=500>
+<canvas id=canvas>
 </canvas>
+
+<br>
+<lable><input type=checkbox id=chk checked>crt-filter active</label>
 
 <style>
 body {
-	background-color: black;
+	background-color: gray;
 	text-align: center;
 }
 canvas {
@@ -35,6 +38,10 @@ setInterval(() => {
 	}
 }, 1000 / 120);
 
-initFilterCRT(canvas);
+const filteredcanvas = initFilterCRT(canvas, [0.5, 0.5, 0.5]);
+
+chk.oninput = () => {
+	filteredcanvas.setActive(chk.checked);
+};
 
 </script>

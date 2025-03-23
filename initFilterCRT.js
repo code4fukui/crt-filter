@@ -10,19 +10,48 @@
 
 import { shaders } from "./shaders.js";
 
-export function initFilterCRT(pico8_canvas) {
+const getAbsolutePosition = (element) => {
+	const rect = element.getBoundingClientRect();
+	return {
+		top: rect.top + window.scrollY,
+		left: rect.left + window.scrollX,
+		width: rect.width,
+		height: rect.height
+	};
+};
+const copyStyles = (targetElement, sourceElement) => {
+	const computedStyle = getComputedStyle(sourceElement);
+	const properties = [
+		"marginTop", "marginRight", "marginBottom", "marginLeft",
+		"paddingTop", "paddingRight", "paddingBottom", "paddingLeft",
+		//"position",
+		//"top", "left",
+		//"right", "bottom",
+		//"width", "height",
+		//"display", "zIndex"
+	];
+
+	properties.forEach(prop => {
+		targetElement.style[prop] = computedStyle[prop];
+		//console.log(prop, computedStyle[prop]);
+	});
+	const r = getAbsolutePosition(sourceElement);
+	//targetElement.style.top = r.top + parseFloat(computedStyle.marginTop) + "px";
+	targetElement.style.left = r.left + parseFloat(computedStyle.marginLeft) + "px";
+};
+
+export function initFilterCRT(pico8_canvas, bgcolor = [0, 0, 0]) {
 	pico8_canvas.style.position = "absolute";
 	pico8_canvas.style.top = 0;
 	pico8_canvas.style.left = 0;
 
+
 	var canvas = document.createElement('canvas');
 	canvas.id = "crtcanvas";
-	canvas.className = "canvas";
+	//canvas.className = "canvas";
 	//canvas.style.position = "absolute";
 	//canvas.style.top = 0;
 	//canvas.style.left = 0;
-	canvas.width = pico8_canvas.clientWidth;
-	canvas.height = pico8_canvas.clientHeight;
 	var gl = canvas.getContext('webgl');
 	if (!gl)
 		return;
@@ -32,6 +61,25 @@ export function initFilterCRT(pico8_canvas) {
 	pico8_canvas.parentNode.insertBefore(canvas, pico8_canvas);
 	/* keep pico8_canvas in DOM for event handling, but hide it via opacity */
 	pico8_canvas.style.opacity = 0;
+
+	const resizeCanvas = () => {
+		//console.log(pico8_canvas.width, pico8_canvas.clientWidth)
+		canvas.width = pico8_canvas.width;
+		canvas.height = pico8_canvas.height;
+		canvas.style.width = pico8_canvas.clientWidth + "px";
+		canvas.style.height = pico8_canvas.clientHeight + "py";
+    //pico8_canvas.style.top = canvas.offsetTop + "px";
+    //pico8_canvas.style.left = canvas.offsetLeft + "px";
+		/*
+    canvas.style.margin = pico8_canvas.style.margin;
+		canvas.style.padding = pico8_canvas.style.padding;
+		*/
+		copyStyles(pico8_canvas, canvas);
+		//pico8_canvas.style.top = r.top + "px";
+    //pico8_canvas.style.left = r.left + "px";
+	};
+	resizeCanvas();
+	window.addEventListener("resize", resizeCanvas);
 
 	function unbind() {
 		for (var i = 0; i < arguments.length; ++i) {
@@ -89,6 +137,7 @@ export function initFilterCRT(pico8_canvas) {
 	const loc_crt_backbuffer = gl.getUniformLocation(crt_program, "backbuffer");
 	const loc_crt_blurbuffer = gl.getUniformLocation(crt_program, "blurbuffer");
 	const loc_crt_resolution = gl.getUniformLocation(crt_program, "resolution");
+	const loc_crt_bgcolor = gl.getUniformLocation(crt_program, "bgcolor");
 
 	var blur_program = createProgram(vs, fs_blur, "blur_program");
 	const loc_blur_pos = gl.getAttribLocation(blur_program, "pos");
@@ -276,6 +325,7 @@ export function initFilterCRT(pico8_canvas) {
 		gl.activeTexture(gl.TEXTURE1);
 		gl.bindTexture(gl.TEXTURE_2D, blur_buf.tex);
 		gl.uniform2f(loc_crt_resolution, cw, ch);
+		gl.uniform3f(loc_crt_bgcolor, bgcolor[0], bgcolor[1], bgcolor[2]);
 		gl.uniform1f(loc_crt_time, 1.5 * time);
 		gl.uniform1i(loc_crt_backbuffer, 0);
 		gl.uniform1i(loc_crt_blurbuffer, 1);
@@ -289,4 +339,16 @@ export function initFilterCRT(pico8_canvas) {
 	}
 
 	requestAnimationFrame(draw);
+
+	pico8_canvas.org_canvas = canvas;
+	pico8_canvas.setActive = (b) => {
+		if (b) {
+			pico8_canvas.style.opacity = 0;
+			canvas.style.opacity = 1;
+		} else {
+			pico8_canvas.style.opacity = 1;
+			canvas.style.opacity = 0;
+		}
+	};
+	return pico8_canvas;
 }

@@ -17,6 +17,7 @@ export const shaders = {
 	uniform float time;
 	uniform sampler2D backbuffer;
 	uniform sampler2D blurbuffer;
+	uniform vec3 bgcolor;
 	vec3 tsample(sampler2D samp, vec2 tc) {
 		vec3 s=pow(abs(texture2D(samp,vec2(tc.x,1.0-tc.y)).rgb),vec3(2.2));
 		return s*vec3(1.25);
@@ -128,10 +129,12 @@ export const shaders = {
 		col*=(1.0-0.004*(sin(50.0*time+curved_uv.y*2.0)*0.5+0.5));
 
 		/* clamp */
-		if (curved_uv.x < 0.0 || curved_uv.x > 1.0)
-			col*= 0.0;
-		if (curved_uv.y < 0.0 || curved_uv.y > 1.0)
-			col*= 0.0;
+		if (curved_uv.x < 0.0 || curved_uv.x > 1.0) {
+			col = bgcolor;
+		}
+		if (curved_uv.y < 0.0 || curved_uv.y > 1.0) {
+			col = bgcolor;
+		}
 
 		gl_FragColor = vec4(col, 1.0);
 	}
